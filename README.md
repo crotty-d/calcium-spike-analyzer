@@ -2,9 +2,9 @@
 
 Python modules for detection and basic analysis of spikes in intraneuronal calcium (represented by fluorescence signal) resulting from electrical stimulation. Analysis can be done on individual data files (x = time, y = signal) or a directory of such files.
 
-https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_wholeplot.png?raw=true
+![alt text](https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_wholeplot.png)
 
-https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_waveforms_plot.png?raw=true
+![alt text](https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_waveforms_plot.png?raw=true)
 
 The project is at a very early stage, and currently focused on particular experiments I carried out during my PhD: periodic electrical stimulation of cultured neurons stained with a fluorescent dye for intracellular calcium. However, relatively minor adjustments to parameters could allow for application to other related signals/experiments.
 
