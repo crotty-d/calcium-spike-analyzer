@@ -1,0 +1,8 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+
+# Hide certain files from linguist so correct coding language shown
+calspikes/results/* linguist-vendored
+calspikes/data/* linguist-vendored
+calspikes/reference_files/* linguist-vendored
