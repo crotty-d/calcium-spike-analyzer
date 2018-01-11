@@ -1,6 +1,6 @@
 # Calcium Spike Analyzer
 
-Python modules for detection and basic analysis of spikes in intraneuronal calcium (represented by fluorescence signal) resulting from electrical stimulation. Analysis can be done on individual data files (x = time, y = signal) or a directory of such files.
+Small python package for detection and basic analysis of spikes in intraneuronal calcium (represented by fluorescence signal) resulting from electrical stimulation. Analysis can be done on individual data files (x = time, y = signal) or a directory of such files.
 
 ![alt text](https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_wholeplot.png)
 

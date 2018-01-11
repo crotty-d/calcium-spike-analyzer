@@ -265,7 +265,7 @@ def plot_waveforms(time, sig, peakTimes, title="Waveforms of signal spikes", xLa
     # Index for time of spike (= index of signal data [signal/time, i.e. y/x] at that time).
     peakIndices = []
     for peakT in peakTimes:
-        peakIndices = np.append(peakIndices, plt.find(time==peakT))
+        peakIndices = np.append(peakIndices, np.where(time==peakT))
 
     # Make array of appropriate x values (time window for a waveform)
     waveformTime = np.linspace(-1, 2, num=3*SR)
