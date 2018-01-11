@@ -1,12 +1,10 @@
 # Calcium Spike Analyzer
 
-Small python package for detection and basic analysis of spikes in intraneuronal calcium (represented by fluorescence signal) resulting from electrical stimulation. Analysis can be done on individual data files (x = time, y = signal) or a directory of such files.
+Small python package for detection and basic analysis of spikes in intraneuronal calcium (represented by fluorescence signal) resulting from electrical stimulation. Analysis can be done on individual data files (x = time, y = signal) or a directory of such files. The project is at an early stage, and currently focused on a particular type of experiment I carried out in the past: periodic electrical stimulation of cultured neurons stained with a fluorescent dye for intracellular calcium. However, parameter adjustments and/or minor code modifications could enable application to other related signals/experiments.
 
 ![alt text](https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_wholeplot.png)
 
 ![alt text](https://github.com/crotty-d/calcium-spike-analyzer/blob/master/calspikes/results/568region_B_waveforms_plot.png?raw=true)
-
-The project is at an early stage, and currently focused on a particular type of experiment I carried out in the past: periodic electrical stimulation of cultured neurons stained with a fluorescent dye for intracellular calcium. However, parameter adjustments and/or minor code modifications could enable application to other related signals/experiments.
 
 ## Usage
 There are some example input data files (from fluorescence imaging videos of periodically stimulated neurons) in the 'data' directory and some example output in the 'results' directory. The 'reference_files' directory holds validated spike-timing files for performance testing. These directories are used throughout the analysis code, but others can be used by editing directories.py (global changes) or via various individual function parameters (local changes).
