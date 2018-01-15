@@ -21,11 +21,15 @@ import matplotlib.pylab as plt
 # Define module functions
 # ------------------------------------------------------------------------------
 
-def detection_tester(peakTimes, refFilepath=None, error=0.35):
+def detection_tester(peakTimes, refFilepath=None, delimiter=None, tolerance=0.35):
     """
-    Calculates percentage of true (verified) spikes that were detected along with the false spike rate (extra spikes per second of data).
-
-    The detected spike times are compared to the actual spike times (determined by visual inspection)
+    Compares spike times from the spike_detector function to the actual spike times.
+    
+    The actual (validated) times should be listed in a reference text file located at
+    refFilepath; set delimiter via the corresponding paramter, e.g. ',' for CSV.
+    
+    The function ouutputs and returns the percentage of true (verified) spikes that
+    were detected along with the false spike  rate (extra spikes per second of data).
     """
 
     if refFilepath == None:
@@ -36,9 +40,9 @@ def detection_tester(peakTimes, refFilepath=None, error=0.35):
 
     else:
         # Create numpy array of the values in the reference csv file
-        trueTimes = np.genfromtxt(refFilepath, delimiter=',')
+        trueTimes = np.genfromtxt(refFilepath, delimiter=delimiter)
 
-        # First match the two arrays of spike times. Anything within the given error is a match.
+        # First match the two arrays of spike times. Anything within the given tolerance is a match.
 
         # Ensure times are in sequntial order
         peakTimes = np.sort(peakTimes)
@@ -50,13 +54,13 @@ def detection_tester(peakTimes, refFilepath=None, error=0.35):
 
         # Find matching spikes and mark as true detections
         trueDetected = [];
-        # Find indices of dedected spikes that are within the margin of error around each true spike
+        # Find indices of dedected spikes that are within the margin of tolerance around each true spike
         for spike in trueTimes:
-            detectedWithinError = plt.find((uniqueDetected >= spike - error) & (uniqueDetected <= spike + error))
+            detectedWithinTol = plt.find((uniqueDetected >= spike - tolerance) & (uniqueDetected <= spike + tolerance))
             # If detected spikes found...
-            if len(detectedWithinError) > 0:
+            if len(detectedWithinTol) > 0:
                 # ...for each one, check if already present in our list of true dectections, ...
-                for i in detectedWithinError:
+                for i in detectedWithinTol:
                     alreadyMarked = plt.find(trueDetected == uniqueDetected[i])
                     # ...and if not, append it to to that list
                     if len(alreadyMarked) == 0:
@@ -89,7 +93,7 @@ def analysis_tester(testFilepath, refFilepath):
     peakTimes = spikes_analysis.spike_detect(t, sig)[0]
     
     # Call tester function
-    detection_tester(peakTimes, refFilepath)
+    detection_tester(peakTimes, refFilepath, delimiter=',')
 
 
 # ------------------------------------------------------------------------------
