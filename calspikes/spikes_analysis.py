@@ -1,6 +1,6 @@
 #  -*- coding: utf-8 -*-
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Functions for analyzing fluorescence intensity signals to identify and describe spikes in intraneuronal calcium.
+# Functions for teting calcium spike analysis
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Import class containing default directories for input and output data
@@ -22,7 +22,7 @@ from bokeh.palettes import Spectral11
 # Define module functions
 # ------------------------------------------------------------------------------
 
-def spikeDetect(time, sig):
+def spike_detect(time, sig):
     """
     Detects spikes (peaks) in a signal representing calcium-dependent fluorescence intensitiy versus time.
 
@@ -101,7 +101,7 @@ def spikeDetect(time, sig):
 
     return peakTimes, amps, riseTs
 
-def threshFind(peakTimes, initDelay = 1.4, stimPeriod = 12, initStim = 200, endStim = 800, stimIncr = 100):
+def threshFind(peakTimes, *, initDelay=1.4, stimPeriod=12, initStim=200, endStim=800, stimIncr=100):
     """
     Get time when first spike detected and check which 12 s (3s x 4) stimulation period it occured in.
 
@@ -127,10 +127,10 @@ def results(t, sig, singleSpike_values=False):
     """
     Calculates the stimulation threshold and various statistics for the spike pattern.
 
-    The previously defined spikeDetect and stimThresh functions are used to get
+    The previously defined spike_detect and stimThresh functions are used to get
     the results which are returned as a dictionary.
     """
-    peakTimes, amps, riseTs = spikeDetect(t, sig)
+    peakTimes, amps, riseTs = spike_detect(t, sig)
 
     stats = {'spike_count': len(peakTimes), 'stimulation_threshold': threshFind(peakTimes), 'mean_amplitude': np.mean(amps), 'amplitude_sd': np.std(amps), 'mean_rise_time': np.mean(riseTs), 'rise_time_sd': np.std(riseTs)}
 
@@ -140,62 +140,7 @@ def results(t, sig, singleSpike_values=False):
         return stats
 
 
-def detector_tester(peakTimes, refFilename=None, error=0.35): # TODO: Move to testing module
-    """
-    Calculates percentage of true (verified) spikes that were detected along with the false spike rate (extra spikes per second of data).
-
-    The detected spike times are compared to the actual spike times (determined by visual inspection)
-    """
-
-    if refFilename == None:
-        print("True spike times were not provided, so the spike detection perfromance cannot be evaluated")
-        percentTrueSpikes, falseSpikeRate = "N/A", "N/A"
-
-        return {'percent_true_spikes': percentTrueSpikes, 'false_spike_rate': falseSpikeRate}
-
-    else:
-        # Create numpy array of the values in the reference csv file
-        trueTimes = np.genfromtxt(refFilename, delimiter=',')
-
-        # First match the two arrays of spike times. Anything within the given error is a match.
-
-        # Ensure times are in sequntial order
-        peakTimes = np.sort(peakTimes)
-        trueTimes = np.sort(trueTimes)
-
-        # Remove spikes with the same times (false spikes)
-        detected = np.append(peakTimes, -1)
-        uniqueDetected = peakTimes[plt.find(plt.diff(detected) != 0)]
-
-        # Find matching spikes and mark as true detections
-        trueDetected = [];
-        # Find indices of dedected spikes that are within the margin of error around each true spike
-        for spike in trueTimes:
-            detectedWithinError = plt.find((uniqueDetected >= spike - error) & (uniqueDetected <= spike + error))
-            # If detected spikes found...
-            if len(detectedWithinError) > 0:
-                # ...for each one, check if already present in our list of true dectections, ...
-                for i in detectedWithinError:
-                    alreadyMarked = plt.find(trueDetected == uniqueDetected[i])
-                    # ...and if not, append it to to that list
-                    if len(alreadyMarked) == 0:
-                        trueDetected = np.append(trueDetected, uniqueDetected[i])
-
-        percentTrueSpikes = 100.0 * len(trueDetected) / len(trueTimes)
-
-        # Everything else is a false spike
-        totalTime = (trueTimes[len(trueTimes) - 1] - trueTimes[0])
-        falseSpikeRate = (len(peakTimes) - len(trueTimes)) / totalTime
-
-        print("\nAction potential detector performance:")
-        print("     Number of true spikes =", len(trueTimes))
-        print("     Percentage of true spikes detected =", percentTrueSpikes)
-        print("     False spike rate = ", falseSpikeRate, "spikes/s")
-
-        return {'percent_true_spikes': percentTrueSpikes, 'false_spike_rate': falseSpikeRate}
-
-
-def plot_spikes(time, sig, peakTimes, title="Plot of signal versus time", xLabel="Time (s)", yLabel="Signal", outdir=default_dir.results, outHTML=None, plotter='all'):
+def plot_spikes(time, sig, peakTimes, *, title="Plot of signal versus time", xLabel="Time (s)", yLabel="Signal", outdir=default_dir.results, outHTML=None, plotter='all'):
     """
     The function creates a labeled plot showing the normalized sig signal
     and indicating the location of detected spikes with a marker above the spike.
@@ -250,7 +195,7 @@ def plot_spikes(time, sig, peakTimes, title="Plot of signal versus time", xLabel
             show(p)
 
 
-def plot_waveforms(time, sig, peakTimes, title="Waveforms of signal spikes", xLabel="Time (s)", yLabel="Signal", outdir=default_dir.results, outHTML=None, plotter='all'):
+def plot_waveforms(time, sig, peakTimes, *, title="Waveforms of signal spikes", xLabel="Time (s)", yLabel="Signal", outdir=default_dir.results, outHTML=None, plotter='all'):
     """
     The function creates a labeled plot showing the waveforms for each
     signal spike.
@@ -316,7 +261,7 @@ def plot_waveforms(time, sig, peakTimes, title="Waveforms of signal spikes", xLa
             show(p)
 
 
-def spikes_analyze(filename, indir=default_dir.data, outdir=default_dir.results, refdir=default_dir.reference, refFile=None, plotter='all'):
+def spikes_analyze(filename, indir=default_dir.data, outdir=default_dir.results, plotter='all'):
     """
     Analysis and plot (complete signal and spike waveforms) for a single data file
 
@@ -327,7 +272,7 @@ def spikes_analyze(filename, indir=default_dir.data, outdir=default_dir.results,
     as the value of the refFile parameter. Otherwise perfromance testing will be skipped.
     """
 
-    # Input filepath
+    # Input filepath #TODO: Seperate loading from this function? Can take t and sig as args and load data in main
     inFilePath = os.path.join(indir, filename)
 
     # Load file data into two numpy arrays
@@ -363,11 +308,6 @@ def spikes_analyze(filename, indir=default_dir.data, outdir=default_dir.results,
     print("\nSpike times (s):", peakTimes, "\n\nSpike amplitudes (RFU):", amps, "\n\nSpike rise times (RFU/s):", riseTs)
     print("\nNumber of spikes:", stats['spike_count'])
 
-    # Optional: Test spike detection performance against validated times for the same signal.
-    if refFile:
-        refFilePath = os.path.join(refdir, refFile)
-        detector_tester(peakTimes, refFilePath)
-
     # Output analysis results
     print("\nStimulation threshold: %s V/m." % stats['stimulation_threshold'])
     print("\nAverage spike amplitude:", stats['mean_amplitude'], "+/-", stats['amplitude_sd'], "RFU.")
@@ -380,8 +320,9 @@ def spikes_analyze(filename, indir=default_dir.data, outdir=default_dir.results,
 # ------------------------------------------------------------------------------
 
 def main():
-    """Main code to call above module functions"""
-    spikes_analyze('599region_A.txt', refFile='599regionA_ref_times.csv', plotter='all')
+    """Main code calling above module functions"""
+    
+    spikes_analyze('599region_A.txt', plotter='all')
 
     # Exit program (try/except to avoid exception message iPython console)
     try:

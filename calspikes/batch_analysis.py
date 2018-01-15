@@ -17,9 +17,9 @@ import numpy as np
 import pandas as pd
 import time
 import inspect
-import importlib# TODO: Remove from final version
+import importlib # TODO: Remove from final version
 # Reload module to ensure latest changes are included
-importlib.reload(spikes_analysis)# TODO: Remove from final version
+importlib.reload(spikes_analysis) # TODO: Remove from final version
 
 
 # ------------------------------------------------------------------------------

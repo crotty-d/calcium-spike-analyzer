@@ -7,7 +7,8 @@
 # Import class containing default directories for input and output data
 # Note: Can modify this file to change default directories
 from directories import default_dir
-# Import spikeAnalyzer module for accessing and processing data
+# Import module containing functions to convert and analyze file
+import spikes_analysis
 import data_processing
 
 # Import required external modules
@@ -15,22 +16,20 @@ import sys
 import os.path
 import numpy as np
 import matplotlib.pylab as plt
-from bokeh.plotting import figure, output_file, show
-from bokeh.palettes import Spectral11
 
 
 # ------------------------------------------------------------------------------
 # Define module functions
 # ------------------------------------------------------------------------------
 
-def detection_tester(peakTimes, refFilename=None, error=0.35): # TODO: Move to testing module
+def detection_tester(peakTimes, refFilepath=None, error=0.35):
     """
     Calculates percentage of true (verified) spikes that were detected along with the false spike rate (extra spikes per second of data).
 
     The detected spike times are compared to the actual spike times (determined by visual inspection)
     """
 
-    if refFilename == None:
+    if refFilepath == None:
         print("True spike times were not provided, so the spike detection perfromance cannot be evaluated")
         percentTrueSpikes, falseSpikeRate = "N/A", "N/A"
 
@@ -38,7 +37,7 @@ def detection_tester(peakTimes, refFilename=None, error=0.35): # TODO: Move to t
 
     else:
         # Create numpy array of the values in the reference csv file
-        trueTimes = np.genfromtxt(refFilename, delimiter=',')
+        trueTimes = np.genfromtxt(refFilepath, delimiter=',')
 
         # First match the two arrays of spike times. Anything within the given error is a match.
 
@@ -70,13 +69,57 @@ def detection_tester(peakTimes, refFilename=None, error=0.35): # TODO: Move to t
         totalTime = (trueTimes[len(trueTimes) - 1] - trueTimes[0])
         falseSpikeRate = (len(peakTimes) - len(trueTimes)) / totalTime
 
-        print("\nAction potential detector performance:")
+        print("\nSpike detector performance:")
+        print("\n     Number of spikes detected in test analysis =", len(peakTimes))
         print("     Number of true spikes =", len(trueTimes))
         print("     Percentage of true spikes detected =", percentTrueSpikes)
         print("     False spike rate = ", falseSpikeRate, "spikes/s")
 
         return {'percent_true_spikes': percentTrueSpikes, 'false_spike_rate': falseSpikeRate}
+
+
+def analysis_tester(testFilepath, refFilepath):
+    """
+    Runs an analysis of a file and compares the results to those from a validated refernce file. 
+    """
     
-def analysis_tester:
-    pass
+    # Load file data into two numpy arrays
+    t, sig = data_processing.xydata_to_vectors(testFilepath)
+    
+    # Call analysis function
+    peakTimes = spikes_analysis.spike_detect(t, sig)[0]
+    
+    # Call tester function
+    detection_tester(peakTimes, refFilepath)
+
+
+# ------------------------------------------------------------------------------
+# Main code
+# ------------------------------------------------------------------------------
+
+def main():
+    """Main code calling above module functions"""
+    
+    # Locate testing data
+    testFiledir = default_dir.data
+    refFiledir = default_dir.reference
+    testFilename = '599region_A.txt'
+    refFilename = '599regionA_ref_times.csv'
+    testFilepath = os.path.join(testFiledir, testFilename)
+    refFilepath = os.path.join(refFiledir, refFilename)
+    
+    # Run test
+    analysis_tester(testFilepath, refFilepath)
+
+    # Exit program (try/except to avoid exception message iPython console)
+    try:
+        sys.exit(0)
+    except SystemExit:
+        print("\n++++++++ TESTING COMPLETE +++++++++\n")
+
+
+if __name__ == '__main__':
+
+    main()
+    
 
