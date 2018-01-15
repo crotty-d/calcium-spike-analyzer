@@ -1,6 +1,6 @@
 #  -*- coding: utf-8 -*-
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-# Functions for teting calcium spike analysis
+# Functions for analyzing fluorescence intensity signals to identify and describe spikes in intraneuronal calcium
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 # Import class containing default directories for input and output data
