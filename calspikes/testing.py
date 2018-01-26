@@ -3,9 +3,9 @@
 # Functions for teting calcium spike analysis
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Import class containing default directories for input and output data
+# Import default directories for input and output data
 # Note: Can modify this file to change default directories
-from directories import default_dir
+import default_dirs
 # Import module containing functions to convert and analyze file
 import spikes_analysis
 import data_processing
@@ -104,8 +104,8 @@ def main():
     """Main code calling above module functions"""
     
     # Locate testing data
-    testFiledir = default_dir.data
-    refFiledir = default_dir.reference
+    testFiledir = default_dirs.data
+    refFiledir = default_dirs.reference
     testFilename = '599region_A.txt'
     refFilename = '599regionA_ref_times.csv'
     testFilepath = os.path.join(testFiledir, testFilename)

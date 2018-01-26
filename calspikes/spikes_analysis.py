@@ -3,9 +3,9 @@
 # Functions for analyzing fluorescence intensity signals to identify and describe spikes in intraneuronal calcium
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Import class containing default directories for input and output data
+# Import default directories for input and output data
 # Note: Can modify this file to change default directories
-from directories import default_dir
+import default_dirs
 # Import spikeAnalyzer module for accessing and processing data
 import data_processing
 
@@ -140,7 +140,7 @@ def results(t, sig, singleSpike_values=False):
         return stats
 
 
-def plot_spikes(time, sig, peakTimes, *, title="Plot of signal versus time", xLabel="Time (s)", yLabel="Signal", outdir=default_dir.results, outHTML=None, plotter='all'):
+def plot_spikes(time, sig, peakTimes, *, title="Plot of signal versus time", xLabel="Time (s)", yLabel="Signal", outdir=default_dirs.results, outHTML=None, plotter='all'):
     """
     The function creates a labeled plot showing the normalized sig signal
     and indicating the location of detected spikes with a marker above the spike.
@@ -195,7 +195,7 @@ def plot_spikes(time, sig, peakTimes, *, title="Plot of signal versus time", xLa
             show(p)
 
 
-def plot_waveforms(time, sig, peakTimes, *, title="Waveforms of signal spikes", xLabel="Time (s)", yLabel="Signal", outdir=default_dir.results, outHTML=None, plotter='all'):
+def plot_waveforms(time, sig, peakTimes, *, title="Waveforms of signal spikes", xLabel="Time (s)", yLabel="Signal", outdir=default_dirs.results, outHTML=None, plotter='all'):
     """
     The function creates a labeled plot showing the waveforms for each
     signal spike.
@@ -261,7 +261,7 @@ def plot_waveforms(time, sig, peakTimes, *, title="Waveforms of signal spikes", 
             show(p)
 
 
-def spikes_analyze(filename, indir=default_dir.data, outdir=default_dir.results, plotter='all'):
+def spikes_analyze(filename, indir=default_dirs.data, outdir=default_dirs.results, plotter='all'):
     """
     Analysis and plot (complete signal and spike waveforms) for a single data file
 

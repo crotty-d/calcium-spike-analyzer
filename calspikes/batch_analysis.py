@@ -3,9 +3,9 @@
 # Functions for batch anlaysis of sets (directories) of data files
 # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-# Import class containing default directories for input and output data
+# Import default directories for input and output data
 # Note: Can modify this file to change default directories
-from directories import default_dir
+import default_dirs
 # Import module containing functions to convert and analyze file
 import spikes_analysis
 import data_processing
@@ -17,16 +17,13 @@ import numpy as np
 import pandas as pd
 import time
 import inspect
-import importlib # TODO: Remove from final version
-# Reload module to ensure latest changes are included
-importlib.reload(spikes_analysis) # TODO: Remove from final version
 
 
 # ------------------------------------------------------------------------------
 # Define module functions
 # ------------------------------------------------------------------------------
 
-def batch_analysis(analysis, dataDirectory=default_dir.data, filetype='.txt', delimiter=None, createCSV=True): # TODO: Add batch plotting to files
+def batch_analysis(analysis, dataDirectory=default_dirs.data, filetype='.txt', delimiter=None, createCSV=True): # TODO: Add batch plotting to files
     '''
     Walks through the directory and analyses all files of a certain type using a specified function (analysis).
 
@@ -59,7 +56,7 @@ def batch_analysis(analysis, dataDirectory=default_dir.data, filetype='.txt', de
         results = pd.DataFrame.from_dict(resultDict, orient='index')
         # Create csv file from this DataFrame unless 'createCSV' argument is False'
         if createCSV:
-            dirResults = default_dir.results
+            dirResults = default_dirs.results
             outFilename = 'batch_' + inspect.getmodule(analysis).__name__ + '(' + time.strftime("%Y-%m-%d_%H.%M.%S", time.localtime()) + ').csv'
             outFilepath = os.path.join(dirResults, outFilename)
             results.to_csv(outFilepath)
