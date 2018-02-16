@@ -266,7 +266,7 @@ def spikes_analyze(filename, indir=default_dirs.data, outdir=default_dirs.result
     Analysis and plot (complete signal and spike waveforms) for a single data file
 
     To automatically save plots to files (HTML) in directory, plotter must equal 'bokeh' or 'all'.
-    plotter='matplotlib' to display using matplotlib only.
+    Use plotter='matplotlib' to display using matplotlib only.
 
     If you have a csv file of validated times for the signal being analyzed, assign it
     as the value of the refFile parameter. Otherwise perfromance testing will be skipped.
@@ -321,7 +321,7 @@ def spikes_analyze(filename, indir=default_dirs.data, outdir=default_dirs.result
 
 def main():
     """Main code calling above module functions"""
-    
+
     spikes_analyze('599region_A.txt', plotter='all')
 
     # Exit program (try/except to avoid exception message iPython console)
